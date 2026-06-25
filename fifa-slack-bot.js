@@ -10,11 +10,15 @@ const app = new App({
 // Fetch FIFA 2026 data from API
 async function getFIFAData() {
   try {
+    console.log('📡 Fetching FIFA data...');
+    console.log('API Key present:', !!process.env.RAPIDAPI_KEY);
+    
     // Using api-football.com (rapidapi) for FIFA 2026 data
     const leagueId = 1; // FIFA World Cup league ID
     const season = 2026;
     
     // Fetch standings
+    console.log(`Fetching standings for league ${leagueId}, season ${season}...`);
     const standingsRes = await fetch(
       `https://api-football-v1.p.rapidapi.com/v3/standings?league=${leagueId}&season=${season}`,
       {
@@ -25,8 +29,10 @@ async function getFIFAData() {
       }
     );
     const standingsData = await standingsRes.json();
+    console.log('Standings response:', standingsData);
     
     // Fetch fixtures (next matches)
+    console.log('Fetching fixtures...');
     const fixturesRes = await fetch(
       `https://api-football-v1.p.rapidapi.com/v3/fixtures?league=${leagueId}&season=${season}&next=10`,
       {
@@ -37,6 +43,7 @@ async function getFIFAData() {
       }
     );
     const fixturesData = await fixturesRes.json();
+    console.log('Fixtures response:', fixturesData);
     
     return { standings: standingsData, fixtures: fixturesData };
   } catch (error) {
