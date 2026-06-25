@@ -112,36 +112,41 @@ function formatFixtures(fixturesData) {
   };
 }
 
-// Post button to channel
-app.command('/fifa-setup', async ({ ack, say }) => {
+// Post button to channel or DM
+app.command('/fifa-setup', async ({ ack, respond }) => {
   ack();
 
-  await say({
-    text: 'FIFA World Cup 2026 Updates',
-    blocks: [
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '🏆 *FIFA World Cup 2026 Updates*\n\nClick the button below to see the latest schedules, standings, and tournament info.'
-        }
-      },
-      {
-        type: 'actions',
-        elements: [
-          {
-            type: 'button',
-            text: {
-              type: 'plain_text',
-              text: '📊 View Schedule & Standings'
-            },
-            action_id: 'fifa_info_button',
-            style: 'primary'
+  try {
+    await respond({
+      text: 'FIFA World Cup 2026 Updates',
+      blocks: [
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: '🏆 *FIFA World Cup 2026 Updates*\n\nClick the button below to see the latest schedules, standings, and tournament info.'
           }
-        ]
-      }
-    ]
-  });
+        },
+        {
+          type: 'actions',
+          elements: [
+            {
+              type: 'button',
+              text: {
+                type: 'plain_text',
+                text: '📊 View Schedule & Standings'
+              },
+              action_id: 'fifa_info_button',
+              style: 'primary'
+            }
+          ]
+        }
+      ]
+    });
+  } catch (error) {
+    console.error('Error responding to slash command:', error);
+    await respond({ text: '❌ Error: Could not load FIFA data. Try again later.' });
+  }
 });
 
 // Handle button click
