@@ -113,11 +113,11 @@ function formatFixtures(fixturesData) {
 }
 
 // Post button to channel
-app.command('/fifa-setup', async ({ ack, body, client }) => {
+app.command('/fifa-setup', async ({ ack, say }) => {
   ack();
 
-  await client.chat.postMessage({
-    channel: body.channel_id,
+  await say({
+    text: 'FIFA World Cup 2026 Updates',
     blocks: [
       {
         type: 'section',
