@@ -1,0 +1,24 @@
+{
+  "name": "fifa-2026-slack-bot",
+  "version": "1.0.0",
+  "description": "Slack bot for FIFA World Cup 2026 schedules and standings",
+  "main": "fifa-slack-bot.js",
+  "scripts": {
+    "start": "node fifa-slack-bot.js",
+    "dev": "nodemon fifa-slack-bot.js"
+  },
+  "keywords": ["slack", "fifa", "world-cup", "bot"],
+  "author": "PK",
+  "license": "MIT",
+  "dependencies": {
+    "@slack/bolt": "^3.18.0",
+    "dotenv": "^16.3.1",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
