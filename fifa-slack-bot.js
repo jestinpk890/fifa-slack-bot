@@ -154,50 +154,10 @@ app.command('/fifa-setup', async ({ ack, respond }) => {
 app.action('fifa_info_button', async ({ ack, body, client }) => {
   ack();
 
-  await client.views.open({
-    trigger_id: body.trigger_id,
-    view: {
-      type: 'modal',
-      callback_id: 'fifa_info_modal',
-      title: {
-        type: 'plain_text',
-        text: 'FIFA 2026 Info'
-      },
-      blocks: [
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '⏳ *Loading FIFA World Cup 2026 data...*'
-          }
-        }
-      ]
-    }
-  });
-
-  // Fetch and update modal with real data
-  const data = await getFIFAData();
-  
-  if (data) {
-    const blocks = [
-      formatFixtures(data.fixtures),
-      {
-        type: 'divider'
-      },
-      formatStandings(data.standings),
-      {
-        type: 'context',
-        elements: [
-          {
-            type: 'mrkdwn',
-            text: '🔄 Last updated: ' + new Date().toLocaleString()
-          }
-        ]
-      }
-    ];
-
-    await client.views.update({
-      view_id: body.view.id,
+  try {
+    // Open modal with loading state
+    const openResponse = await client.views.open({
+      trigger_id: body.trigger_id,
       view: {
         type: 'modal',
         callback_id: 'fifa_info_modal',
@@ -205,9 +165,55 @@ app.action('fifa_info_button', async ({ ack, body, client }) => {
           type: 'plain_text',
           text: 'FIFA 2026 Info'
         },
-        blocks: blocks
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: '⏳ *Loading FIFA World Cup 2026 data...*'
+            }
+          }
+        ]
       }
     });
+
+    // Fetch FIFA data
+    const data = await getFIFAData();
+    
+    if (data && openResponse.view && openResponse.view.id) {
+      const blocks = [
+        formatFixtures(data.fixtures),
+        {
+          type: 'divider'
+        },
+        formatStandings(data.standings),
+        {
+          type: 'context',
+          elements: [
+            {
+              type: 'mrkdwn',
+              text: '🔄 Last updated: ' + new Date().toLocaleString()
+            }
+          ]
+        }
+      ];
+
+      // Update modal with real data
+      await client.views.update({
+        view_id: openResponse.view.id,
+        view: {
+          type: 'modal',
+          callback_id: 'fifa_info_modal',
+          title: {
+            type: 'plain_text',
+            text: 'FIFA 2026 Info'
+          },
+          blocks: blocks
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error handling button click:', error);
   }
 });
 
